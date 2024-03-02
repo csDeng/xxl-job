@@ -1,0 +1,35 @@
+version: '3.0'
+
+services:
+  mysql:
+    container_name: "mysql"
+    build: ./mysql
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    container_name: "phpmyadmin"
+    links:
+      - mysql
+    build: ./phpmyadmin
+    restart: always
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_ARBITRARY=1 允许登录任何ip
+    ports:
+      - "3307:80"
+    depends_on:
+      - mysql
+
+
+volumes:
+  db: {}
+
+
+networks:
+  default:
+    driver: bridge
